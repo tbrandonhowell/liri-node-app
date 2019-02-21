@@ -1,53 +1,80 @@
 
-// dependencies:
+// TODO: write a better readme file
+// TODO: generally clean up my comments and console.logs
+
+
+// =================================
+// DEPENDENCIES:
 var axios = require("axios");
 var Spotify = require('node-spotify-api');
-
-
-// =================================
-// FROM HOMEWORK INSTRUCTIONS:
-
-// read and set any environment variables with the dotenv package:
-require("dotenv").config();
-
-// import the `keys.js` file and store it in a variable:
-var keys = require("./keys.js");
-
-// access your keys information like so:
-var spotify = new Spotify(keys.spotify);
-
+require("dotenv").config(); // read and set any environment variables with the dotenv package
+var keys = require("./keys.js"); // import the `keys.js` file and store it in a variable
+var spotify = new Spotify(keys.spotify); // access your keys information like so
+var fs = require("fs");
+var moment = require('moment');
 // =================================
 
 
-
-
-
-
-
-// inputs:
+// =================================
+// CAPTURE INPUTS:
 var action = process.argv[2]; // grab the action
 var input = process.argv.slice(3).join(" "); // get input by slicing and joining the array to get the input
-console.log("==============================================");
-console.log("===== TESTING =====");
-console.log("==============================================");
-console.log('action = "' + action + '" and input = "' + input + '"');
-console.log("==============================================");
-console.log("==============================================\n\n");
+// =================================
 
 
+// TODO: use a package or build my own function to create columns for the concertThis() output
+// =================================
+// concertThis() FUNCTION:
 var concertThis = function(input) {
-    console.log("concertThis triggered");
+    if (input != "") {
+        queryString = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp"
+        axios.get(queryString).then(function(response) {
+            console.log("\n\n============ " + input.toUpperCase() + ": UPCOMING SHOWS ============");
+            if (response.data == "\n{warn=Not found}\n") {
+                console.log('\nSorry, "' + input + '" was not found on BandsInTown.\n\n')
+            } else if (!response.data[1]){
+                console.log("\nSorry, it doesn't look like there are any upcoming events for " + input + ".\n\n");
+            } else {
+                response.data.forEach(function(event){
+                    // build out the full location name dependent on what information is available:
+                    var fullLocation; 
+                    if (event.venue.city) {
+                        fullLocation = event.venue.city;
+                    }
+                    if (event.venue.region) {
+                        fullLocation = fullLocation + ", " + event.venue.region;
+                    }
+                    if (event.venue.country && event.venue.country != "United States") {
+                        fullLocation = fullLocation + ", " + event.venue.country;
+                    }
+                    // strip the datetime down to pretty date:
+                    var uglyDate = event.datetime.slice(0, -9);
+                    var uglyDate = moment(uglyDate, "YYYY-MM-DD");
+                    var prettyDate = moment(uglyDate).format("MM/DD");
+                    // print out the event:
+                    console.log("\n" + prettyDate + " ~ " + event.venue.name + " ~ " + fullLocation);
+                });
+                console.log("\n\n");
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+    } else {
+        console.log('\nPlease input an artist name when running this function.\n\n');
+    }
 }
+// =================================
 
 
+// =================================
+// spotifyThisSong() FUNCTION:
+// TODO: need to figure out how to make the matching better
+// see https://developer.spotify.com/documentation/web-api/reference/search/search/
 var spotifyThisSong = function(input) {
-    console.log("==============================================");
-    console.log("===== TESTING =====");
-    console.log("==============================================");
     console.log("spotifyThisSong triggered");
-    console.log("original input = " + input);
-    if (input == "") {
-        input = "The Sign";
+    if (input == '') {
+        input = '\"The%20Sign\"';
     }
     console.log("checked input = " + input);
     spotify.search({ type: 'track', query: input }, function(err, data) {
@@ -56,22 +83,24 @@ var spotifyThisSong = function(input) {
     }
     // console.log(data); 
     // console.log(data.tracks.items[0]);
+    // TODO: do I know what happens if the song doesn't exist?
+    // TODO: do we care if multiple songs come back with that same title?
     console.log("==============================================");
     console.log("==============================================\n\n");
     console.log("\nArtist: " + data.tracks.items[0].album.artists[0].name);
     console.log("\nSong Name: " + data.tracks.items[0].name);
-    console.log("\nPreview Link: " + data.tracks.items[0].album.href);
+    console.log("\nPreview Link: " + data.tracks.items[0].preview_url);
     console.log("\nAlbum: " + data.tracks.items[0].album.name);
     });
 }
+            // TODO: clean up the output of this in general
+// =================================
 
 
+// =================================
+//  FUNCTION:
 var movieThis = function(input) {
-    console.log("==============================================");
-    console.log("===== TESTING =====");
-    console.log("==============================================");
     console.log("movieThis triggered");
-    console.log("original input = " + input);
     if (input == "") {
         input = "Mr. Nobody";
     }
@@ -80,10 +109,8 @@ var movieThis = function(input) {
     // ^^ courtesy of https://stackoverflow.com/questions/3794919/replace-all-spaces-in-a-string-with
     console.log("prepped input = " + queryInput);
     var queryString = "http://www.omdbapi.com/?t=" + queryInput + "&apikey=trilogy";
-    // TODO: should the apikey be obscured somehow, or does that matter?
+    // TODO: should the api key be obscured somehow, or does that matter?
     console.log("queryString = " + queryString);
-    console.log("==============================================");
-    console.log("==============================================\n\n");
     axios.get(queryString).then(
     function(response) {
         if (response.data.Response === 'False') {
@@ -107,16 +134,49 @@ var movieThis = function(input) {
     .catch(function(err) {
         console.log(err);
     });
+                // TODO: clean up the output of this in general
+    // TODO: similar question here - do we do something if there is more than one result?
 }
+// =================================
 
 
+// =================================
+//  FUNCTION:
 var doWhatItSays = function(input) {
     console.log("doWhatItSays triggered");
+    fs.readFile("random.txt", "utf8", function(err, data) {
+        if(err) {
+            return console.log("Error: ", err);
+        }
+        console.log(data);
+        data = data.replace(/"/g,''); // strip out any quotes
+        data = data.replace(/'/g,''); // strip out any apostrophes
+        data = data.split(",");
+        console.log(data);
+        if (data[0] == "concert-this") {
+            concertThis(data[1]);
+        } else if (data[0] == "spotify-this-song") {
+            spotifyThisSong(data[1]);
+        } else if (data[0] == "movie-this") {
+            movieThis(data[1]);
+        } else {
+            console.log("random.txt Action Request Not Recognized");
+        }
+    });
 }
+// =================================
 
 
 
+// * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
 
+// * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
+
+// * Edit the text in random.txt to test out the feature for movie-this and concert-this.
+
+
+// =================================
+// :
 if (action == "concert-this") {
     concertThis(input);
 } else if (action == "spotify-this-song") {
@@ -128,17 +188,7 @@ if (action == "concert-this") {
 } else {
     console.log("Action Request Not Recognized");
 }
-// ^^ replace this with a switch statement
-
-
-
-
+// TODO: ^^ replace this with a switch statement
 // =================================
-// HOMEWORK SPECS:
 
-// 1. `node liri.js concert-this <artist/band name here>`
-// 2. `node liri.js spotify-this-song '<song name here>'`
-// 3. `node liri.js movie-this '<movie name here>'`
-// 4. `node liri.js do-what-it-says`
 
-// =================================
