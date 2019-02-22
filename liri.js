@@ -12,6 +12,7 @@ var keys = require("./keys.js"); // import the `keys.js` file and store it in a 
 var spotify = new Spotify(keys.spotify); // access your keys information like so
 var fs = require("fs");
 var moment = require('moment');
+var wrap = require("word-wrap");
 // =================================
 
 
@@ -22,7 +23,6 @@ var input = process.argv.slice(3).join(" "); // get input by slicing and joining
 // =================================
 
 
-// TODO: use a package or build my own function to create columns for the concertThis() output
 // =================================
 // concertThis() FUNCTION:
 var concertThis = function(input) {
@@ -69,55 +69,50 @@ var concertThis = function(input) {
 
 // =================================
 // spotifyThisSong() FUNCTION:
-// TODO: need to figure out how to make the matching better
-// see https://developer.spotify.com/documentation/web-api/reference/search/search/
 var spotifyThisSong = function(input) {
-    console.log("spotifyThisSong triggered");
     if (input == '') {
-        input = '\"The%20Sign\"';
+        input = 'Ace of Base The Sign';
     }
-    console.log("checked input = " + input);
     spotify.search({ type: 'track', query: input }, function(err, data) {
-    if (err) {
-        return console.log('Error occurred: ' + err);
-    }
-    // console.log(data); 
-    // console.log(data.tracks.items[0]);
-    // TODO: do I know what happens if the song doesn't exist?
-    // TODO: do we care if multiple songs come back with that same title?
-    console.log("==============================================");
-    console.log("==============================================\n\n");
-    console.log("\nArtist: " + data.tracks.items[0].album.artists[0].name);
-    console.log("\nSong Name: " + data.tracks.items[0].name);
-    console.log("\nPreview Link: " + data.tracks.items[0].preview_url);
-    console.log("\nAlbum: " + data.tracks.items[0].album.name);
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+        if (!data.tracks.items[0]) {
+            console.log('\nSorry, "' + input + '" was not found on Spotify.\n\n')
+        } else {
+            console.log("\n\n==============================================");
+            console.log("================SPOTIFY SEARCH:===============")
+            console.log("==============================================");
+            console.log("\nArtist:         " + data.tracks.items[0].album.artists[0].name);
+            console.log("\nSong Name:      " + data.tracks.items[0].name);
+            console.log("\nPreview Link:   " + data.tracks.items[0].preview_url);
+            console.log("\nAlbum:          " + data.tracks.items[0].album.name + "\n\n");
+        }
     });
 }
-            // TODO: clean up the output of this in general
 // =================================
 
 
 // =================================
 //  FUNCTION:
 var movieThis = function(input) {
-    console.log("movieThis triggered");
     if (input == "") {
         input = "Mr. Nobody";
     }
-    console.log("checked input = " + input);
     queryInput = input.split(' ').join('+');
     // ^^ courtesy of https://stackoverflow.com/questions/3794919/replace-all-spaces-in-a-string-with
-    console.log("prepped input = " + queryInput);
     var queryString = "http://www.omdbapi.com/?t=" + queryInput + "&apikey=trilogy";
-    // TODO: should the api key be obscured somehow, or does that matter?
-    console.log("queryString = " + queryString);
     axios.get(queryString).then(
     function(response) {
         if (response.data.Response === 'False') {
-            console.log('"' + input + '" was not found in the OMDB.\n\n')
+            console.log('\nSorry, "' + input + '" was not found in the OMDB.\n\n')
         } else {
-            // console.log(response.data);
-            console.log("\nTitle: " + response.data.Title);
+            console.log("\n\n||||||||||||||||||||||||||||||||||");
+            console.log("||                              ||");
+            console.log("||          NOW SHOWING:        ||");
+            console.log("||                              ||");
+            console.log("||||||||||||||||||||||||||||||||||");
+            console.log("\n=== " + response.data.Title + " ===");
             console.log("\nYear Released: " + response.data.Released.slice(7));
             console.log("\nIMDB Rating: " + response.data.Ratings[0].Value);
             if (response.data.Ratings[1]) {
@@ -127,15 +122,14 @@ var movieThis = function(input) {
             }
             console.log("\nCountr(ies) Produced In: " + response.data.Country);
             console.log("\nLanguage: " + response.data.Language);
-            console.log("\nPlot: " + response.data.Plot);
-            console.log("\nActors: " + response.data.Actors);
+            console.log("\nPlot: ");
+            console.log(wrap(response.data.Plot));
+            console.log("\nActors: " + response.data.Actors + "\n\n");
         }
     })
     .catch(function(err) {
         console.log(err);
     });
-                // TODO: clean up the output of this in general
-    // TODO: similar question here - do we do something if there is more than one result?
 }
 // =================================
 
