@@ -25,8 +25,8 @@ var input = process.argv.slice(3).join(" "); // get input by slicing and joining
 var concertThis = function(input) {
     if (input != "") {
         queryString = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp"
+        console.log("\n\n============ " + input.toUpperCase() + ": UPCOMING SHOWS ============");
         axios.get(queryString).then(function(response) {
-            console.log("\n\n============ " + input.toUpperCase() + ": UPCOMING SHOWS ============");
             if (response.data == "\n{warn=Not found}\n") {
                 console.log('\nSorry, "' + input + '" was not found on BandsInTown.\n\n')
             } else if (!response.data[1]){
@@ -55,7 +55,8 @@ var concertThis = function(input) {
             }
         })
         .catch(function(err) {
-            console.log(err);
+            // console.log(err);
+            console.log('\nSorry, "' + input + '" was not found on BandsInTown.\n\n')
         });
     } else {
         console.log('\nPlease input an artist name when running this function.\n\n');
@@ -166,7 +167,7 @@ if (action == "concert-this") {
 } else if (action == "do-what-it-says") {
     doWhatItSays(input);
 } else {
-    console.log("Action Request Not Recognized");
+    console.log("\nLIRI Bot Command Not Recognized.\n\n");
 }
 // =================================
 
