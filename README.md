@@ -1,12 +1,12 @@
 # LIRI Bot
 
 
-## === Project Overview ===
+## Project Overview
 
 LIRI Bot was created as a homework assignment for the UNC Chapel Hill Full Stack Web Development Bootcamp, Nov. 2018 Cohort. LIRI Bot is ran from terminal.
 
 
-## === Technologies / Proficiencies ===
+## Technologies / Proficiencies
 
 Skills/technologies incorporated into this assignment:
 * Javascript
@@ -24,11 +24,12 @@ Node packages incorporated into this assignment:
 * [Word-Wrap] (https://www.npmjs.com/package/word-wrap)
 
 
-## === Features ===
+## Features
 
 LIRI Bot will return data to the user based on three inputs:
 
-### == concert-this ==
+
+### concert-this
 
 The concert-this function of LIRI Bot will take the input of a band name, and query the band name against the Bands In Town API. If the band will be performing in the near future, information for those events will be printed to the screen. 
 
@@ -38,10 +39,10 @@ Input format:
 Example:
 `node liri concert-this queens of the stone age`
 
-[[Screencap]]
+![Image of concert-this](https://raw.githubusercontent.com/tbrandonhowell/liri-node-app/master/images/concert-this.png)
+      
 
-
-### == spotify-this-song ==
+### spotify-this-song
 
 The spotify-this-song function of LIRI Bot will take the input of a song name, and query the song name against the Spotify API. If there are matches for the song name, information about the first match in the API's returned JSON object will be printed to the screen.
 
@@ -51,10 +52,10 @@ Input format:
 Example:
 `node liri spotify-this-song paranoid android`
 
-[[Screencap]]
+![Image of concert-this](https://raw.githubusercontent.com/tbrandonhowell/liri-node-app/master/images/spotify-this-song.png)
 
 
-### == movie-this ==
+### movie-this
 
 The movie-this function of LIRI Bot will take the input of a movie name, and query the movie name against the OMDB API. If there is a match for the movie name, information about that movie will be printed to the screen.
 
@@ -64,10 +65,10 @@ Input format:
 Example:
 `node liri movie-this death to smoochy`
 
-[[Screencap]]
+![Image of concert-this](https://raw.githubusercontent.com/tbrandonhowell/liri-node-app/master/images/movie-this.png)
 
 
-### == do-what-it-says ==
+### do-what-it-says
 
 The do-what-it-says function is an additional way to trigger the movie-this, spotify-this-song, or concert-this function based on the contents of random.txt. Within random.txt, you can include a single function type and a search string in the following format:
 
@@ -77,10 +78,10 @@ To trigger this function, type the following in console:
 
 `node liri do-what-it-says`
 
-[[Screencap]]
+![Image of concert-this](https://raw.githubusercontent.com/tbrandonhowell/liri-node-app/master/images/do-what-it-says.png)
 
 
-## === Setup ===
+## LIRI Bot Setup
 
 LIRI Bot requires node.js in order to run. Package.json is included for ease of installation for NPM packages. 
 
