@@ -1,7 +1,4 @@
 
-// TODO: write a better readme file
-// TODO: generally clean up my comments and console.logs
-
 
 // =================================
 // DEPENDENCIES:
@@ -94,7 +91,7 @@ var spotifyThisSong = function(input) {
 
 
 // =================================
-//  FUNCTION:
+// movieThis() FUNCTION:
 var movieThis = function(input) {
     if (input == "") {
         input = "Mr. Nobody";
@@ -135,18 +132,15 @@ var movieThis = function(input) {
 
 
 // =================================
-//  FUNCTION:
+//  doWhatItSays() FUNCTION:
 var doWhatItSays = function(input) {
-    console.log("doWhatItSays triggered");
     fs.readFile("random.txt", "utf8", function(err, data) {
         if(err) {
             return console.log("Error: ", err);
         }
-        console.log(data);
         data = data.replace(/"/g,''); // strip out any quotes
         data = data.replace(/'/g,''); // strip out any apostrophes
         data = data.split(",");
-        console.log(data);
         if (data[0] == "concert-this") {
             concertThis(data[1]);
         } else if (data[0] == "spotify-this-song") {
@@ -161,16 +155,8 @@ var doWhatItSays = function(input) {
 // =================================
 
 
-
-// * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
-
-// * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
-
-// * Edit the text in random.txt to test out the feature for movie-this and concert-this.
-
-
 // =================================
-// :
+// RUN FUNCTION BASED ON INPUT:
 if (action == "concert-this") {
     concertThis(input);
 } else if (action == "spotify-this-song") {
@@ -182,7 +168,6 @@ if (action == "concert-this") {
 } else {
     console.log("Action Request Not Recognized");
 }
-// TODO: ^^ replace this with a switch statement
 // =================================
 
 
