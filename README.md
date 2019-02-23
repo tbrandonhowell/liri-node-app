@@ -5,7 +5,7 @@
 
 LIRI Bot was created as a homework assignment for the UNC Chapel Hill Full Stack Web Development Bootcamp, Nov. 2018 Cohort. LIRI Bot is ran from terminal.
 
-You can watch a video of LIRI Bot in action here: [Link] (https://drive.google.com/file/d/19hlAufCrm2TLe1ddyGa2lF0z4f29coMP/view)
+You can watch a video of LIRI Bot in action here: [Link] (https://drive.google.com/file/d/19hlAufCrm2TLe1ddyGa2lF0z4f29coMP/view?usp=sharing)
 
 
 ## Technologies / Proficiencies
